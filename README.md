@@ -1,71 +1,70 @@
 ## Trading Bot
 
-Данный проект представляет собой торгового бота для работы с API Т-Инвестиций.
+This project is a trading bot for working with the T-Invest API.
 
-Бот реализует сеточную стратегию (grid trading):
+The bot implements a grid trading strategy:
 
-- Выставляет лимитные ордера выше и ниже текущей цены.
-- Отслеживает исполнение ордеров.
-- Автоматически перестраивает сетку.
-- Поддерживает стоп-лосс.
-- Может работать в режиме симуляции (dry_run).
+- Places limit orders above and below the current price.
+- Tracks order execution.
+- Automatically rebuilds the grid.
+- Supports stop-loss.
+- Can run in simulation mode (dry_run).
 
-### Запуск бота
+### Run the Bot
 
 ```bash
 python grid_bot_sdk.py
 ```
 
-### Требования
+### Requirements
 
 - python 3.9+
 - pip
 - Git
 
-### Установка
+### Setup
 
-1. Клонирование репозитория
+#### 1. Installation
+
+Clone the repository:
 
 ```bash
 git clone https://github.com/noneandundefined/tinvest-grid-bot.git
 cd tinvest-grid-bot
 ```
 
-### Установка зависимостей
+#### 2. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Настройка venv и установка зависимостей
+#### 3. Configuration
 
-```bash
-pip install -r requirements.txt
-```
-
-### Настройка
-
-Создай файл .env в корне проекта.
+Create a `.env` file in the project root.
 
 ```.env
 INVEST_TOKEN=your_token_here
 ACCOUNT_ID=your_account_id
 ```
 
-### Конфигурация бота
+#### 4. Bot configuration
 
 ```python
 couples = {
     "VKCO": {
         "enable": "ON", # ON / OFF
-        "symbol": "VKCO", # тикер MOEX
-        "class_code": "TQBR", # класс по умолчанию для акций на МосБирже
-        "size": 1, # лотов в одном ордере сетки
-        "orders_side": 23, # число лимиток ниже и выше цены (каждая сторона)
-        "range_pct": 7, # общий диапазон сетки: +20% / -20% от якорной цены
-        "sl": 10, # стоп-лосс, % ниже самого нижнего уровня покупок (для длинной позиции) # False: при ответе API 90001 «Need confirmation» бот сам повторит заявку с подтверждением. # True: сразу слать с confirm_margin_trade (удобно для маржинального счёта).
+        "symbol": "VKCO", # MOEX ticker
+        "class_code": "TQBR", # default class for MOEX stocks
+        "size": 1, # number of lots per grid order
+        "orders_side": 23, # number of limit orders on each side (buy/sell)
+        "range_pct": 7, # total grid range: +20% / -20% from the anchor price
+        "sl": 10, # stop-loss: % below the lowest buy level (for long position)
+
+        # False: on API error 90001 "Need confirmation", the bot retries with confirmation.
+        # True: sends orders immediately with confirm_margin_trade flag (for margin accounts).
         "confirm_margin_trade": True,
-        "dry_run": False, # True — только логи, без выставления заявок
+        "dry_run": False, # True — logs only, no real orders.
     }
 }
 ```
